@@ -1,4 +1,7 @@
 import THREElib from 'three-js'
+import fresnelShader from './shaders/FresnelShader.js'
+import basicShader from './shaders/BasicShader.js'
+import physicalShader from './shaders/PhysicalShader.js'
 
 var THREE = THREElib();
 
@@ -25,7 +28,7 @@ function init() {
 	camera.position.z = 1000;
 
 	scene = new THREE.Scene();
-	scene.background = new THREE.CubeTextureLoader()
+	let textureCube =  new THREE.CubeTextureLoader()
 								.setPath('png/hdrmap/ggx_filtered/')
 								.load([
 									'pisa_mip1_face0.png',
@@ -36,9 +39,19 @@ function init() {
 									'pisa_mip1_face5.png'
 								]);
 
+	scene.background = textureCube;
+
 	let geometry = new THREE.SphereBufferGeometry(100, 32, 16);
-	let material = new THREE.MeshBasicMaterial({ color: 0xffffff,
-												 envMap: scene.background });
+	// let shader = fresnelShader;
+	// // shader.uniforms.tCube = textureCube;
+	// let uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+	// uniforms["tCube"] = textureCube;
+	let shader = physicalShader;
+	// shader.uniforms.C_diff.value = new THREE.Vector3(0, 0.5, 0.5);
+	// shader.uniforms.opacity = .2;
+	
+
+	let material = new THREE.ShaderMaterial(shader);
 
 
 	createSphere(scene, geometry, material);
@@ -49,6 +62,26 @@ function init() {
 
 	container.appendChild(renderer.domElement);
 }
+
+// function loadVertexShader(shader) {
+// 	return new Promise((resolve, reject) => {
+// 		loader.load(`../shaders/${shader}/vertexShader.glsl`, data => {
+// 			resolve(data);
+// 		},
+// 		xhr => 0,
+// 		xhr => reject(xhr));
+// 	});
+// }
+
+// function loadFragmentShader(shader) {
+// 	return new Promise((resolve, reject) => {
+// 		loader.load(`../shaders/${shader}/fragmentShader.glsl`, data => {
+// 			resolve(data);
+// 		},
+// 		xhr => 0,
+// 		xhr => reject(xhr));
+// 	});
+// }
 
 function animate() {
 	requestAnimationFrame(animate);
