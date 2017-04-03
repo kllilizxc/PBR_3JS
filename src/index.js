@@ -28,27 +28,40 @@ function init() {
 	camera.position.z = 1000;
 
 	scene = new THREE.Scene();
-	let textureCube =  new THREE.CubeTextureLoader()
+	let envMap =  new THREE.CubeTextureLoader()
 								.setPath('png/hdrmap/ggx_filtered/')
 								.load([
-									'pisa_mip1_face0.png',
-									'pisa_mip1_face1.png',
-									'pisa_mip1_face2.png',
-									'pisa_mip1_face3.png',
-									'pisa_mip1_face4.png',
-									'pisa_mip1_face5.png'
+									'pisa_mip5_face0.png',
+									'pisa_mip5_face1.png',
+									'pisa_mip5_face2.png',
+									'pisa_mip5_face3.png',
+									'pisa_mip5_face4.png',
+									'pisa_mip5_face5.png'
 								]);
 
-	scene.background = textureCube;
+
+	let BRDFlut = new THREE.TextureLoader()
+							.load('png/convolution_spec.png');
+
+	let irradianceMap = new THREE.CubeTextureLoader()
+								.setPath('png/hdrmap/diffuse/')
+								.load([
+									'pisa_d_c00.png',
+									'pisa_d_c01.png',
+									'pisa_d_c02.png',
+									'pisa_d_c03.png',
+									'pisa_d_c04.png',
+									'pisa_d_c05.png'
+								]);
+	irradianceMap.minFilter = THREE.LinearFilter;
+
+	scene.background = envMap;
 
 	let geometry = new THREE.SphereBufferGeometry(100, 32, 16);
-	// let shader = fresnelShader;
-	// // shader.uniforms.tCube = textureCube;
-	// let uniforms = THREE.UniformsUtils.clone(shader.uniforms);
-	// uniforms["tCube"] = textureCube;
 	let shader = physicalShader;
-	// shader.uniforms.C_diff.value = new THREE.Vector3(0, 0.5, 0.5);
-	// shader.uniforms.opacity = .2;
+	shader.uniforms.envMap.value = envMap;
+	shader.uniforms.irradianceMap.value = irradianceMap;
+	shader.uniforms.BRDFlut.value = BRDFlut;
 	
 
 	let material = new THREE.ShaderMaterial(shader);
