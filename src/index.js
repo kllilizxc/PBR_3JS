@@ -29,14 +29,14 @@ function init() {
 
 	scene = new THREE.Scene();
 	let envMap =  new THREE.CubeTextureLoader()
-								.setPath('png/hdrmap/ggx_filtered/')
+								.setPath('png/hdrmap/LightProbes/')
 								.load([
-									'pisa_mip5_face0.png',
-									'pisa_mip5_face1.png',
-									'pisa_mip5_face2.png',
-									'pisa_mip5_face3.png',
-									'pisa_mip5_face4.png',
-									'pisa_mip5_face5.png'
+									'pisa_c00.png',
+									'pisa_c01.png',
+									'pisa_c02.png',
+									'pisa_c03.png',
+									'pisa_c04.png',
+									'pisa_c05.png'
 								]);
 
 

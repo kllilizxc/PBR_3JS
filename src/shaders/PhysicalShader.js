@@ -3,7 +3,7 @@ export default {
 		"baseColor": { value: [1, 1, 1] },
 		"ambientColor": { value: [0, 0, 0] },
 		"lightColor": { value: [1, 1, 1] },
-		"roughness": { value: .1 },
+		"roughness": { value: 0 },
 		"metalness": { value: 1 },
 		"LightDirection": { value: [0, 0, 1] },
 		"envMap": { value: null },
@@ -33,6 +33,7 @@ export default {
 
 	fragmentShader: [
 		"const float PI = 3.14159265358979323846;",
+		"const float gamma = 2.2;",
 
 		"uniform vec3 baseColor;",
 		"uniform vec3 lightColor;",
@@ -113,14 +114,22 @@ export default {
 		"	return diffuse + specular;",
 		"}",
 
+		"vec3 gammaCorrection(vec3 color) {",
+		"	return pow(color, vec3(gamma));",
+		"}",
+
+		"vec3 deGammaCorrection(vec3 color) {",
+		"	return pow(color, vec3(1.0 / gamma));",
+		"}",
+
 		"void main() {",
-			"vec3 diffuseColor = mix(baseColor, vec3(0), metalness);",
-			"vec3 specularColor = mix(vec3(0.04), baseColor, metalness);",
+			"vec3 _baseColor = gammaCorrection(baseColor);",
+			"vec3 diffuseColor = mix(_baseColor, vec3(0), metalness);",
+			"vec3 specularColor = mix(vec3(0.04), _baseColor, metalness);",
 			"vec3 modelColor = modelShading(diffuseColor, specularColor, ambientColor, lightColor, roughness, L, N, V);",
 			"vec3 envColor = envShading(diffuseColor, specularColor, envMap, irradianceMap, BRDFlut, roughness, N, V);",
 			"gl_FragColor = vec4(modelColor + envColor, 1);",
-			"float gamma = 2.2;",
-    		"gl_FragColor.rgb = pow(gl_FragColor.rgb, vec3(1.0/gamma));",
+    		"gl_FragColor.rgb = deGammaCorrection(gl_FragColor.rgb);",
 		"}"
 
 	].join( "\n" )
