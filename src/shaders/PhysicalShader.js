@@ -1,11 +1,11 @@
 export default {
 	uniforms: {
-		"baseColor": { value: [1, 1, 1] },
-		"ambientColor": { value: [0, 0, 0] },
-		"lightColor": { value: [1, 1, 1] },
-		"roughness": { value: .1 },
-		"metalness": { value: 1 },
-		"LightDirection": { value: [0, 0, 1] },
+		"baseColor": { value: [0, 0, 0] },
+		"ambientColor": { value: [0.2, 0.2, 0.2] },
+		"lightColor": { value: [0.2, 0.2, 0.2] },
+		"roughness": { value: 0 },
+		"metalness": { value: 0.5 },
+		"LightDirection": { value: [0.5, 0.5, 0.5] },
 		"envMap": { value: null },
 		"irradianceMap": { value: null },
 		"BRDFlut": { value: null }
